@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saved Opportunities — Student Opportunity Engine</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content">
+    <div class="page-content">
+      <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <h1 class="page-title">🔖 Saved Opportunities</h1>
+          <p class="page-subtitle" id="saved-count-label">Loading...</p>
+        </div>
+        <div style="display:flex;gap:var(--space-2);">
+          <select class="form-select" id="saved-sort" style="font-size:var(--text-sm);">
+            <option value="deadline">Sort by Deadline</option>
+            <option value="match">Sort by Match Score</option>
+            <option value="latest">Sort by Latest</option>
+          </select>
+          <select class="form-select" id="saved-filter" style="font-size:var(--text-sm);">
+            <option value="All">All Categories</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2" id="saved-grid" style="gap:var(--space-4);"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data/opportunities.js"></script>
+<script src="js/data/mockUsers.js"></script>
+<script src="js/services/recommendationEngine.js"></script>
+<script src="js/services/userService.js"></script>
+<script src="js/services/authService.js"></script>
+<script src="js/services/opportunityService.js"></script>
+<script src="js/services/savedService.js"></script>
+<script src="js/services/trackerService.js"></script>
+<script src="js/services/notificationService.js"></script>
+<script src="js/services/aiAssistant.js"></script>
+<script src="js/components/toast.js"></script>
+<script src="js/components/sidebar.js"></script>
+<script src="js/components/opportunityCard.js"></script>
+<script src="js/components/aiChat.js"></script>
+<script>
+  document.documentElement.setAttribute('data-theme', localStorage.getItem('soe_theme') || 'dark');
+  if (!AuthService.requireAuth()) throw new Error();
+  const user = AuthService.getCurrentUser();
+  const profile = UserService.getProfile(user.id);
+  Sidebar.init({ page: 'saved', currentUser: user, studentProfile: profile });
+
+  // Populate filter
+  const filterSel = document.getElementById('saved-filter');
+  const cats = ['All', ...new Set(OPPORTUNITIES.map(o => o.category))];
+  cats.forEach(c => {
+    const opt = document.createElement('option'); opt.value=c; opt.textContent=c;
+    filterSel.appendChild(opt);
+  });
+
+  function render() {
+    const sort = document.getElementById('saved-sort').value;
+    const filterCat = document.getElementById('saved-filter').value;
+    let opps = SavedService.getSavedOpportunities(user.id);
+
+    if (filterCat !== 'All') opps = opps.filter(o => o.category === filterCat);
+
+    // Add recommendation data
+    opps = opps.map(o => ({ ...o, recommendation: RecommendationEngine.scoreOne(profile, o) }));
+
+    if (sort === 'match')    opps.sort((a,b) => b.recommendation.score - a.recommendation.score);
+    if (sort === 'deadline') opps.sort((a,b) => new Date(a.deadline) - new Date(b.deadline));
+    if (sort === 'latest')   opps.sort((a,b) => new Date(b.postedAt) - new Date(a.postedAt));
+
+    document.getElementById('saved-count-label').textContent = `${opps.length} saved opportunit${opps.length===1?'y':'ies'}`;
+    OpportunityCard.renderList(opps, document.getElementById('saved-grid'), { userId: user.id, showReasons: true });
+  }
+
+  document.getElementById('saved-sort').addEventListener('change', render);
+  document.getElementById('saved-filter').addEventListener('change', render);
+
+  render();
+  AIChat.init(profile);
+</script>
+</body>
+</html>

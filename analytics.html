@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — Student Opportunity Engine</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <style>
+    .analytics-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-6);margin-bottom:var(--space-6); }
+    @media(max-width:900px){ .analytics-grid{grid-template-columns:1fr;} }
+    .chart-card { background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-5); }
+    .funnel-stage { display:flex;align-items:center;margin-bottom:var(--space-3); }
+    .funnel-label { width:100px;font-size:var(--text-sm);color:var(--text-muted); }
+    .funnel-bar-wrap { flex:1;height:24px;background:var(--bg-input);border-radius:var(--radius-sm);overflow:hidden;position:relative; }
+    .funnel-bar { height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:var(--space-2);font-size:10px;color:white;font-weight:var(--fw-bold);transition:width 1s ease-out; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content">
+    <div class="page-content">
+      <div class="page-header">
+        <h1 class="page-title">📈 Analytics</h1>
+        <p class="page-subtitle">Track your application success rates and recommendation history</p>
+      </div>
+
+      <div class="analytics-grid">
+        
+        <!-- Application Funnel -->
+        <div class="chart-card animate-fade-in">
+          <h3 style="margin-top:0;margin-bottom:var(--space-4);">Application Funnel</h3>
+          <div id="funnel-chart"></div>
+        </div>
+
+        <!-- Activity Overview -->
+        <div class="chart-card animate-fade-in" style="animation-delay:100ms;">
+          <h3 style="margin-top:0;margin-bottom:var(--space-4);">Activity Overview</h3>
+          <div class="grid-2" style="gap:var(--space-4);">
+            <div style="background:rgba(99,102,241,0.05);padding:var(--space-4);border-radius:var(--radius-md);text-align:center;">
+              <div style="font-size:32px;font-weight:var(--fw-bold);color:var(--primary-400);" id="stat-total">0</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);">Total Applications</div>
+            </div>
+            <div style="background:rgba(16,185,129,0.05);padding:var(--space-4);border-radius:var(--radius-md);text-align:center;">
+              <div style="font-size:32px;font-weight:var(--fw-bold);color:var(--success-400);" id="stat-success">0%</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);">Success Rate</div>
+            </div>
+            <div style="background:rgba(245,158,11,0.05);padding:var(--space-4);border-radius:var(--radius-md);text-align:center;">
+              <div style="font-size:32px;font-weight:var(--fw-bold);color:var(--warning-400);" id="stat-saved">0</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);">Saved Opportunities</div>
+            </div>
+            <div style="background:rgba(6,182,212,0.05);padding:var(--space-4);border-radius:var(--radius-md);text-align:center;">
+              <div style="font-size:32px;font-weight:var(--fw-bold);color:var(--accent-400);" id="stat-recs">0</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);">Top Matches Viewed</div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+      <!-- Match History -->
+      <div class="chart-card animate-fade-in" style="animation-delay:200ms;">
+        <h3 style="margin-top:0;margin-bottom:var(--space-4);">Top Recommended Categories</h3>
+        <p style="font-size:var(--text-sm);color:var(--text-muted);margin-bottom:var(--space-4);">Based on your profile, these are the domains where you have the highest match scores.</p>
+        <div id="category-chart" style="display:flex;align-items:flex-end;gap:var(--space-2);height:200px;padding-top:var(--space-4);border-bottom:1px solid var(--border-color);"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data/opportunities.js"></script>
+<script src="js/data/mockUsers.js"></script>
+<script src="js/services/recommendationEngine.js"></script>
+<script src="js/services/userService.js"></script>
+<script src="js/services/authService.js"></script>
+<script src="js/services/opportunityService.js"></script>
+<script src="js/services/savedService.js"></script>
+<script src="js/services/trackerService.js"></script>
+<script src="js/services/notificationService.js"></script>
+<script src="js/components/sidebar.js"></script>
+<script src="js/components/aiChat.js"></script>
+<script>
+  document.documentElement.setAttribute('data-theme', localStorage.getItem('soe_theme') || 'dark');
+  if (!AuthService.requireAuth()) throw new Error();
+  
+  const user = AuthService.getCurrentUser();
+  const profile = UserService.getProfile(user.id);
+  Sidebar.init({ page: 'analytics', currentUser: user, studentProfile: profile });
+
+  // Funnel Data
+  const stats = TrackerService.getStats(user.id);
+  const funnelStages = ['Interested', 'Applied', 'Shortlisted', 'Interview', 'Selected'];
+  const funnelColors = ['var(--primary-400)', 'var(--accent-400)', 'var(--warning-400)', '#c084fc', 'var(--success-400)'];
+  
+  const maxFunnel = stats.total || 1; // avoid /0
+  
+  document.getElementById('funnel-chart').innerHTML = funnelStages.map((stage, i) => {
+    const val = stats[stage] || 0;
+    const pct = Math.max(5, (val / maxFunnel) * 100);
+    return `
+      <div class="funnel-stage">
+        <div class="funnel-label">${stage}</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width:0%;background:${funnelColors[i]};" data-width="${pct}%">${val}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  // Animate funnel bars
+  setTimeout(() => {
+    document.querySelectorAll('.funnel-bar').forEach(bar => {
+      bar.style.width = bar.getAttribute('data-width');
+    });
+  }, 100);
+
+  // Overview Stats
+  document.getElementById('stat-total').textContent = stats.total;
+  document.getElementById('stat-success').textContent = stats.total ? Math.round(((stats.Selected || 0) / stats.total) * 100) + '%' : '0%';
+  document.getElementById('stat-saved').textContent = SavedService.getSavedCount(user.id);
+  
+  const recs = RecommendationEngine.getTopRecommendations(profile, OPPORTUNITIES, 20);
+  document.getElementById('stat-recs').textContent = recs.length;
+
+  // Category Chart (mocked avg score per category)
+  const catScores = {};
+  const catCounts = {};
+  recs.forEach(r => {
+    catScores[r.category] = (catScores[r.category] || 0) + r.recommendation.score;
+    catCounts[r.category] = (catCounts[r.category] || 0) + 1;
+  });
+  
+  const chartData = Object.keys(catScores).map(c => ({
+    category: c,
+    avg: Math.round(catScores[c] / catCounts[c])
+  })).sort((a,b) => b.avg - a.avg).slice(0, 8);
+  
+  const chartContainer = document.getElementById('category-chart');
+  if (chartData.length === 0) {
+    chartContainer.innerHTML = '<div style="width:100%;text-align:center;color:var(--text-muted);">Not enough data</div>';
+  } else {
+    chartContainer.innerHTML = chartData.map(d => `
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">
+        <div style="font-size:10px;font-weight:bold;margin-bottom:4px;color:var(--text-muted);">${d.avg}%</div>
+        <div style="width:100%;max-width:40px;height:${d.avg}%;background:linear-gradient(0deg, var(--primary-600), var(--primary-400));border-radius:4px 4px 0 0;transition:height 1s ease-out;"></div>
+        <div style="font-size:10px;text-align:center;margin-top:8px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;">${d.category}</div>
+      </div>
+    `).join('');
+  }
+
+  AIChat.init(profile);
+</script>
+</body>
+</html>

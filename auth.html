@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In / Sign Up — Student Opportunity Engine</title>
+  <meta name="description" content="Sign in or create your account to access personalized opportunity recommendations." />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-bg-orbs">
+      <div class="auth-orb auth-orb-1"></div>
+      <div class="auth-orb auth-orb-2"></div>
+    </div>
+
+    <div class="auth-card animate-scale-in">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🎯</div>
+        <div>
+          <div class="auth-logo-text">OpportunityEngine</div>
+          <div style="font-size:var(--text-xs);color:var(--text-muted);">PS2 · AI-Powered</div>
+        </div>
+      </div>
+
+      <!-- Demo login strip -->
+      <div id="demo-strip" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-5);display:none;">
+        <div style="font-size:var(--text-xs);font-weight:var(--fw-semibold);color:var(--primary-300);margin-bottom:6px;">⚡ Demo Mode — try a pre-built profile:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <button class="demo-pill" data-profile="demo-ai">🤖 AI/ML</button>
+          <button class="demo-pill" data-profile="demo-web">💻 Web Dev</button>
+          <button class="demo-pill" data-profile="demo-cyber">🔐 Cyber</button>
+          <button class="demo-pill" data-profile="demo-design">🎨 Design</button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" id="tab-login" role="tab" aria-selected="true" aria-controls="panel-login">Sign In</button>
+        <button class="auth-tab" id="tab-signup" role="tab" aria-selected="false" aria-controls="panel-signup">Sign Up</button>
+      </div>
+
+      <!-- Login Panel -->
+      <div id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-subtitle">Sign in to see your personalized recommendations</p>
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="login-email">Email</label>
+            <input class="form-input" id="login-email" type="email" placeholder="you@university.edu" autocomplete="email" required />
+            <span class="form-error" id="login-email-err" style="display:none;"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <input class="form-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+            <span class="form-error" id="login-pass-err" style="display:none;"></span>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-bottom:var(--space-5);">
+            <a href="#" style="font-size:var(--text-sm);">Forgot password?</a>
+          </div>
+          <div id="login-global-err" class="form-error" style="display:none;margin-bottom:var(--space-4);"></div>
+          <button type="submit" class="btn btn-primary w-full" id="login-btn">
+            Sign In
+          </button>
+        </form>
+        <div style="text-align:center;margin-top:var(--space-5);font-size:var(--text-sm);color:var(--text-muted);">
+          Don't have an account? <a href="#" id="switch-to-signup">Create one →</a>
+        </div>
+      </div>
+
+      <!-- Signup Panel -->
+      <div id="panel-signup" role="tabpanel" aria-labelledby="tab-signup" style="display:none;">
+        <h1 class="auth-title">Create account</h1>
+        <p class="auth-subtitle">Start discovering opportunities personalized for you</p>
+        <form id="signup-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="signup-name">Full Name</label>
+            <input class="form-input" id="signup-name" type="text" placeholder="Arjun Sharma" autocomplete="name" required />
+            <span class="form-error" id="signup-name-err" style="display:none;"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="signup-email">Email</label>
+            <input class="form-input" id="signup-email" type="email" placeholder="you@university.edu" autocomplete="email" required />
+            <span class="form-error" id="signup-email-err" style="display:none;"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="signup-password">Password</label>
+            <input class="form-input" id="signup-password" type="password" placeholder="Minimum 6 characters" autocomplete="new-password" required />
+            <span class="form-error" id="signup-pass-err" style="display:none;"></span>
+          </div>
+          <div id="signup-global-err" class="form-error" style="display:none;margin-bottom:var(--space-4);"></div>
+          <button type="submit" class="btn btn-primary w-full" id="signup-btn">
+            Create Account
+          </button>
+        </form>
+        <div style="text-align:center;margin-top:var(--space-5);font-size:var(--text-sm);color:var(--text-muted);">
+          Already have an account? <a href="#" id="switch-to-login">Sign in →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .demo-pill {
+      background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.25);
+      border-radius: var(--radius-full); padding: 4px 10px;
+      font-size: var(--text-xs); color: var(--primary-300);
+      cursor: pointer; transition: all var(--transition-fast);
+      font-family: var(--font-sans);
+    }
+    .demo-pill:hover { background: rgba(99,102,241,0.3); border-color: var(--primary-400); }
+    .btn-loading { opacity: 0.7; pointer-events: none; }
+  </style>
+
+  <!-- Data & Services -->
+  <script src="js/data/opportunities.js"></script>
+  <script src="js/data/mockUsers.js"></script>
+  <script src="js/services/recommendationEngine.js"></script>
+  <script src="js/services/userService.js"></script>
+  <script src="js/services/authService.js"></script>
+  <script src="js/services/savedService.js"></script>
+  <script src="js/services/trackerService.js"></script>
+  <script src="js/services/notificationService.js"></script>
+  <script src="js/components/toast.js"></script>
+
+  <script>
+    // Apply theme
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('soe_theme') || 'dark');
+
+    // If already logged in → go to dashboard
+    const sess = JSON.parse(localStorage.getItem('soe_session') || 'null');
+    if (sess) {
+      const users = JSON.parse(localStorage.getItem('soe_users') || '{}');
+      const u = users[sess.email];
+      window.location.href = (u && u.onboardingComplete) ? 'dashboard.html' : 'onboarding.html';
+    }
+
+    const params = new URLSearchParams(location.search);
+
+    // Show demo strip
+    const demoParam = params.get('demo');
+    const demoStrip = document.getElementById('demo-strip');
+    demoStrip.style.display = 'block';
+
+    // Auto-login demo if ?demo=profile-key
+    if (demoParam && DEMO_PROFILES[demoParam]) {
+      loginAsDemo(demoParam);
+    }
+
+    // Tab switching
+    const tabs = { login: document.getElementById('tab-login'), signup: document.getElementById('tab-signup') };
+    const panels = { login: document.getElementById('panel-login'), signup: document.getElementById('panel-signup') };
+
+    function switchTab(tab) {
+      Object.keys(tabs).forEach(k => {
+        tabs[k].classList.toggle('active', k === tab);
+        tabs[k].setAttribute('aria-selected', k === tab);
+        panels[k].style.display = k === tab ? 'block' : 'none';
+      });
+    }
+
+    tabs.login.addEventListener('click', () => switchTab('login'));
+    tabs.signup.addEventListener('click', () => switchTab('signup'));
+    document.getElementById('switch-to-signup').addEventListener('click', (e) => { e.preventDefault(); switchTab('signup'); });
+    document.getElementById('switch-to-login').addEventListener('click', (e) => { e.preventDefault(); switchTab('login'); });
+
+    // Pre-select tab from URL
+    if (params.get('tab') === 'signup') switchTab('signup');
+
+    // Demo pills
+    document.querySelectorAll('.demo-pill').forEach(btn => {
+      btn.addEventListener('click', () => loginAsDemo(btn.dataset.profile));
+    });
+
+    function loginAsDemo(profileKey) {
+      const result = AuthService.loginAsDemo(profileKey);
+      if (result.success) {
+        const users = JSON.parse(localStorage.getItem('soe_users') || '{}');
+        window.location.href = 'dashboard.html';
+      } else {
+        Toast.show({ type: 'error', title: 'Demo error', message: result.error });
+      }
+    }
+
+    // Login form
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      clearErrors('login');
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-password').value;
+
+      let valid = true;
+      if (!email) { showErr('login-email-err', 'Email is required'); valid = false; }
+      if (!pass) { showErr('login-pass-err', 'Password is required'); valid = false; }
+      if (!valid) return;
+
+      const btn = document.getElementById('login-btn');
+      btn.classList.add('btn-loading');
+      btn.textContent = 'Signing in...';
+
+      setTimeout(() => {
+        const result = AuthService.login(email, pass);
+        btn.classList.remove('btn-loading');
+        btn.textContent = 'Sign In';
+        if (result.success) {
+          const users = JSON.parse(localStorage.getItem('soe_users') || '{}');
+          const u = users[email.toLowerCase()];
+          window.location.href = (u && u.onboardingComplete) ? 'dashboard.html' : 'onboarding.html';
+        } else {
+          showErr('login-global-err', result.error);
+        }
+      }, 600);
+    });
+
+    // Signup form
+    document.getElementById('signup-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      clearErrors('signup');
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const pass = document.getElementById('signup-password').value;
+
+      let valid = true;
+      if (!name) { showErr('signup-name-err', 'Name is required'); valid = false; }
+      if (!email || !email.includes('@')) { showErr('signup-email-err', 'Valid email required'); valid = false; }
+      if (!pass || pass.length < 6) { showErr('signup-pass-err', 'Password must be at least 6 characters'); valid = false; }
+      if (!valid) return;
+
+      const btn = document.getElementById('signup-btn');
+      btn.classList.add('btn-loading');
+      btn.textContent = 'Creating account...';
+
+      setTimeout(() => {
+        const result = AuthService.signup(name, email, pass);
+        btn.classList.remove('btn-loading');
+        btn.textContent = 'Create Account';
+        if (result.success) {
+          UserService.createEmptyProfile(result.user.id, name, email);
+          window.location.href = 'onboarding.html';
+        } else {
+          showErr('signup-global-err', result.error);
+        }
+      }, 600);
+    });
+
+    function showErr(id, msg) {
+      const el = document.getElementById(id);
+      if (el) { el.style.display = 'flex'; el.textContent = '⚠ ' + msg; }
+    }
+    function clearErrors(prefix) {
+      document.querySelectorAll(`[id^="${prefix}-"][id$="-err"]`).forEach(e => e.style.display = 'none');
+      const global = document.getElementById(`${prefix}-global-err`);
+      if (global) global.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

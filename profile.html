@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Profile — Student Opportunity Engine</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <style>
+    .profile-grid { display:grid;grid-template-columns:1fr 300px;gap:var(--space-6); }
+    .section-card { background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-5);margin-bottom:var(--space-6); }
+    .section-header-row { display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);padding-bottom:var(--space-3);border-bottom:1px solid var(--border-subtle); }
+    @media(max-width:900px){ .profile-grid{grid-template-columns:1fr;} }
+    
+    /* Edit mode inputs */
+    .edit-input { width:100%;background:var(--bg-input);border:1px solid var(--border-color);color:var(--text-primary);padding:8px 12px;border-radius:var(--radius-md);margin-bottom:var(--space-2); }
+    .tag-input-wrap { display:flex;flex-wrap:wrap;gap:var(--space-2);padding:8px;border:1px solid var(--border-color);border-radius:var(--radius-md);background:var(--bg-input);min-height:42px;margin-bottom:var(--space-2); }
+    .tag-input-wrap input { border:none;background:transparent;color:var(--text-primary);outline:none;flex:1;min-width:60px; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content">
+    <div class="page-content">
+      <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <h1 class="page-title">👤 Student Profile</h1>
+          <p class="page-subtitle">Your profile data powers the recommendation engine. Keep it updated!</p>
+        </div>
+        <button class="btn btn-primary" id="edit-btn">✏️ Edit Profile</button>
+      </div>
+
+      <div class="profile-grid">
+        <!-- Main Info -->
+        <div>
+          <!-- Basic Info -->
+          <div class="section-card">
+            <div class="section-header-row">
+              <h3 style="margin:0;">Basic Information</h3>
+            </div>
+            <div class="grid-2" style="gap:var(--space-4);">
+              <div>
+                <label class="form-label">Full Name</label>
+                <div class="view-mode" id="view-name"></div>
+                <input type="text" class="edit-input edit-mode" id="edit-name" style="display:none;" />
+              </div>
+              <div>
+                <label class="form-label">Degree</label>
+                <div class="view-mode" id="view-degree"></div>
+                <input type="text" class="edit-input edit-mode" id="edit-degree" style="display:none;" />
+              </div>
+              <div>
+                <label class="form-label">Major/Field of Study</label>
+                <div class="view-mode" id="view-major"></div>
+                <input type="text" class="edit-input edit-mode" id="edit-major" style="display:none;" />
+              </div>
+              <div>
+                <label class="form-label">Year of Study</label>
+                <div class="view-mode" id="view-year"></div>
+                <input type="number" class="edit-input edit-mode" id="edit-year" min="1" max="5" style="display:none;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills & Interests -->
+          <div class="section-card">
+            <div class="section-header-row">
+              <h3 style="margin:0;">Skills & Interests</h3>
+            </div>
+            <div style="margin-bottom:var(--space-4);">
+              <label class="form-label">Technical Skills <span class="badge badge-ghost" style="font-size:10px;">35% weight in recommendations</span></label>
+              <div class="view-mode chips-grid" id="view-skills"></div>
+              <div class="edit-mode" style="display:none;">
+                <div class="tag-input-wrap" id="edit-skills-wrap">
+                  <input type="text" id="edit-skills-input" placeholder="Type a skill and press Enter..." />
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Interests / Domains <span class="badge badge-ghost" style="font-size:10px;">20% weight in recommendations</span></label>
+              <div class="view-mode chips-grid" id="view-interests"></div>
+              <div class="edit-mode" style="display:none;">
+                <div class="tag-input-wrap" id="edit-interests-wrap">
+                  <input type="text" id="edit-interests-input" placeholder="Type an interest and press Enter..." />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Career Goals & Preferences -->
+          <div class="section-card">
+            <div class="section-header-row">
+              <h3 style="margin:0;">Career Goals & Preferences</h3>
+            </div>
+            <div style="margin-bottom:var(--space-4);">
+              <label class="form-label">Primary Career Goal <span class="badge badge-ghost" style="font-size:10px;">20% weight in recommendations</span></label>
+              <div class="view-mode" id="view-goal" style="font-weight:var(--fw-medium);color:var(--primary-400);"></div>
+              <select class="edit-input edit-mode" id="edit-goal" style="display:none;">
+                <option value="Software Engineering">Software Engineering</option>
+                <option value="Data Science & AI">Data Science & AI</option>
+                <option value="Product Management">Product Management</option>
+                <option value="Design & UX">Design & UX</option>
+                <option value="Research & Academia">Research & Academia</option>
+                <option value="Entrepreneurship">Entrepreneurship</option>
+              </select>
+            </div>
+            <div class="grid-2" style="gap:var(--space-4);">
+              <div>
+                <label class="form-label">Preferred Location</label>
+                <div class="view-mode" id="view-location"></div>
+                <select class="edit-input edit-mode" id="edit-location" style="display:none;">
+                  <option value="Remote">Remote</option>
+                  <option value="On-site">On-site</option>
+                  <option value="Hybrid">Hybrid</option>
+                  <option value="Any">Any</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Opportunity Types</label>
+                <div class="view-mode chips-grid" id="view-types"></div>
+                <div class="edit-mode" style="display:none;font-size:var(--text-sm);">
+                  <label><input type="checkbox" class="type-check" value="Internship"> Internship</label><br>
+                  <label><input type="checkbox" class="type-check" value="Hackathon"> Hackathon</label><br>
+                  <label><input type="checkbox" class="type-check" value="Project"> Project</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="edit-mode" style="display:none;text-align:right;margin-bottom:var(--space-6);">
+            <button class="btn btn-ghost" id="cancel-btn">Cancel</button>
+            <button class="btn btn-primary" id="save-btn">💾 Save Profile & Update Recommendations</button>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div>
+          <!-- Profile Strength -->
+          <div class="section-card" style="text-align:center;background:linear-gradient(180deg,rgba(99,102,241,0.1),transparent);">
+            <div style="margin-bottom:var(--space-3);font-weight:var(--fw-bold);">Profile Strength</div>
+            <div style="font-size:32px;font-weight:var(--fw-extrabold);color:var(--primary-400);" id="profile-score">0%</div>
+            <div class="progress-bar" style="margin:var(--space-3) 0;"><div class="progress-fill" id="profile-bar" style="width:0%;"></div></div>
+            <p style="font-size:var(--text-xs);color:var(--text-muted);">A complete profile guarantees high-quality, personalized recommendations.</p>
+          </div>
+          
+          <!-- Recommendation Impact Demo -->
+          <div class="section-card" style="border-color:rgba(16,185,129,0.3);">
+            <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);color:var(--success-400);font-weight:var(--fw-bold);">
+              <span>💡</span> Dynamic Engine
+            </div>
+            <p style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-3);">
+              Notice how your recommendations change immediately after saving your profile.
+            </p>
+            <a href="dashboard.html" class="btn btn-secondary w-full" style="font-size:var(--text-xs);">View Recommendations</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data/opportunities.js"></script>
+<script src="js/data/mockUsers.js"></script>
+<script src="js/services/recommendationEngine.js"></script>
+<script src="js/services/userService.js"></script>
+<script src="js/services/authService.js"></script>
+<script src="js/components/toast.js"></script>
+<script src="js/components/sidebar.js"></script>
+<script src="js/components/aiChat.js"></script>
+<script>
+  document.documentElement.setAttribute('data-theme', localStorage.getItem('soe_theme') || 'dark');
+  if (!AuthService.requireAuth()) throw new Error();
+  const user = AuthService.getCurrentUser();
+  let profile = UserService.getProfile(user.id);
+  Sidebar.init({ page: 'profile', currentUser: user, studentProfile: profile });
+
+  let editSkills = [];
+  let editInterests = [];
+  let isEditing = false;
+
+  function renderView() {
+    profile = UserService.getProfile(user.id);
+    document.getElementById('view-name').textContent = profile.name || '-';
+    document.getElementById('view-degree').textContent = profile.education?.degree || '-';
+    document.getElementById('view-major').textContent = profile.education?.major || '-';
+    document.getElementById('view-year').textContent = profile.education?.year ? `Year ${profile.education.year}` : '-';
+    
+    document.getElementById('view-skills').innerHTML = profile.skills.map(s => `<span class="badge badge-accent">${s}</span>`).join('');
+    document.getElementById('view-interests').innerHTML = profile.interests.map(i => `<span class="badge badge-ghost">${i}</span>`).join('');
+    
+    document.getElementById('view-goal').textContent = profile.careerGoal || '-';
+    document.getElementById('view-location').textContent = profile.preferences?.location || '-';
+    document.getElementById('view-types').innerHTML = (profile.preferences?.opportunityTypes||[]).map(t => `<span class="badge badge-ghost">${t}</span>`).join('');
+
+    const score = RecommendationEngine.getProfileCompletionScore(profile);
+    document.getElementById('profile-score').textContent = score + '%';
+    document.getElementById('profile-bar').style.width = score + '%';
+    document.getElementById('profile-bar').style.background = score >= 90 ? 'var(--success-500)' : score >= 60 ? 'var(--warning-500)' : 'var(--danger-500)';
+  }
+
+  function toggleEdit() {
+    isEditing = !isEditing;
+    document.querySelectorAll('.view-mode').forEach(e => e.style.display = isEditing ? 'none' : '');
+    document.querySelectorAll('.edit-mode').forEach(e => e.style.display = isEditing ? '' : 'none');
+    document.getElementById('edit-btn').style.display = isEditing ? 'none' : '';
+
+    if (isEditing) {
+      document.getElementById('edit-name').value = profile.name;
+      document.getElementById('edit-degree').value = profile.education?.degree || '';
+      document.getElementById('edit-major').value = profile.education?.major || '';
+      document.getElementById('edit-year').value = profile.education?.year || '';
+      document.getElementById('edit-goal').value = profile.careerGoal || '';
+      document.getElementById('edit-location').value = profile.preferences?.location || 'Any';
+      
+      const types = profile.preferences?.opportunityTypes || [];
+      document.querySelectorAll('.type-check').forEach(cb => cb.checked = types.includes(cb.value));
+
+      editSkills = [...(profile.skills || [])];
+      editInterests = [...(profile.interests || [])];
+      renderTags();
+    }
+  }
+
+  function renderTags() {
+    // Render skills
+    const sWrap = document.getElementById('edit-skills-wrap');
+    sWrap.querySelectorAll('.tag').forEach(e => e.remove());
+    editSkills.forEach((s, i) => {
+      const tag = document.createElement('span'); tag.className = 'badge badge-accent tag'; tag.innerHTML = `${s} <span style="cursor:pointer;margin-left:4px;" onclick="editSkills.splice(${i},1);renderTags()">×</span>`;
+      sWrap.insertBefore(tag, document.getElementById('edit-skills-input'));
+    });
+    // Render interests
+    const iWrap = document.getElementById('edit-interests-wrap');
+    iWrap.querySelectorAll('.tag').forEach(e => e.remove());
+    editInterests.forEach((int, i) => {
+      const tag = document.createElement('span'); tag.className = 'badge badge-ghost tag'; tag.innerHTML = `${int} <span style="cursor:pointer;margin-left:4px;" onclick="editInterests.splice(${i},1);renderTags()">×</span>`;
+      iWrap.insertBefore(tag, document.getElementById('edit-interests-input'));
+    });
+  }
+
+  // Tag inputs event listeners
+  document.getElementById('edit-skills-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.value.trim()) {
+      editSkills.push(e.target.value.trim()); e.target.value = ''; renderTags(); e.preventDefault();
+    }
+  });
+  document.getElementById('edit-interests-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.value.trim()) {
+      editInterests.push(e.target.value.trim()); e.target.value = ''; renderTags(); e.preventDefault();
+    }
+  });
+
+  document.getElementById('edit-btn').addEventListener('click', toggleEdit);
+  document.getElementById('cancel-btn').addEventListener('click', toggleEdit);
+
+  document.getElementById('save-btn').addEventListener('click', () => {
+    const updated = {
+      ...profile,
+      name: document.getElementById('edit-name').value,
+      education: {
+        degree: document.getElementById('edit-degree').value,
+        major: document.getElementById('edit-major').value,
+        year: parseInt(document.getElementById('edit-year').value) || 1
+      },
+      skills: editSkills,
+      interests: editInterests,
+      careerGoal: document.getElementById('edit-goal').value,
+      preferences: {
+        location: document.getElementById('edit-location').value,
+        opportunityTypes: Array.from(document.querySelectorAll('.type-check:checked')).map(cb => cb.value)
+      }
+    };
+    
+    UserService.updateProfile(updated);
+    Toast.show({ type: 'success', title: 'Profile Updated', message: 'Your recommendations have been dynamically updated.' });
+    toggleEdit();
+    renderView();
+  });
+
+  renderView();
+  AIChat.init(profile);
+</script>
+</body>
+</html>

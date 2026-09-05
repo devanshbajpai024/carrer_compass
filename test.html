@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recommendation Engine Test Suite</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Recommendation Engine Test Suite</h1>
+  <div id="results"></div>
+
+  <script src="js/services/recommendationEngine.js"></script>
+  <script>
+    const log = (msg, pass) => {
+      const el = document.createElement('div');
+      el.innerHTML = `<span class="${pass ? 'pass' : 'fail'}">${pass ? '✓ PASS' : '✗ FAIL'}</span> - ${msg}`;
+      document.getElementById('results').appendChild(el);
+    };
+
+    const mockOpp = {
+      id: "test-opp",
+      title: "Test Intern",
+      category: "Internship",
+      domain: "Artificial Intelligence",
+      requiredSkills: ["Python", "Machine Learning"],
+      educationLevel: ["Undergraduate"],
+      minYear: 2,
+      mode: "Remote",
+      stipend: "Paid",
+      deadline: "2030-01-01"
+    };
+
+    // A. Strong Match
+    const profileA = {
+      careerGoals: ["AI Engineer"],
+      interests: ["Artificial Intelligence"],
+      skills: ["Python", "Machine Learning", "Deep Learning"],
+      basic: { degree: "B.Tech", year: 3 },
+      preferences: { mode: "Remote", paid: true, opportunityTypes: ["Internship"], domains: ["Artificial Intelligence"] }
+    };
+    const recA = RecommendationEngine.scoreOne(profileA, mockOpp);
+    log(`Strong Match: Score is ${recA.score} (Expected high)`, recA.score > 80);
+
+    // B. Weak Match
+    const profileB = {
+      careerGoals: ["Product Designer"],
+      interests: ["Design"],
+      skills: ["Figma", "UI/UX"],
+      basic: { degree: "B.Tech", year: 3 }
+    };
+    const recB = RecommendationEngine.scoreOne(profileB, mockOpp);
+    log(`Weak Match: Score is ${recB.score} (Expected < 30)`, recB.score < 30);
+
+    // C. Ineligible Student
+    const profileC = { ...profileA, basic: { degree: "B.Tech", year: 1 } };
+    const recC = RecommendationEngine.scoreOne(profileC, mockOpp);
+    log(`Ineligible Student: Score is ${recC.score} (Expected low, isEligible=${recC.isEligible})`, recC.score < 50 && !recC.isEligible);
+
+    // D. Expired Opportunity
+    const expiredOpp = { ...mockOpp, deadline: "2020-01-01" };
+    const recD = RecommendationEngine.scoreOne(profileA, expiredOpp);
+    log(`Expired Opportunity: Deadline Urgency is ${recD.breakdown.deadlineUrgency}% (Expected 0)`, recD.breakdown.deadlineUrgency === 0);
+
+    // E. Empty Profile
+    try {
+      const recE = RecommendationEngine.scoreOne({}, mockOpp);
+      log(`Empty Profile: Handled gracefully without crash, Score=${recE.score}, NaN=${isNaN(recE.score)}`, !isNaN(recE.score));
+    } catch(e) {
+      log(`Empty Profile: Crashed (${e.message})`, false);
+    }
+
+    // F. Missing Fields
+    try {
+      const recF = RecommendationEngine.scoreOne(profileA, { id: "bad", title: "bad" });
+      log(`Missing Opportunity Fields: Handled gracefully, Score=${recF.score}`, !isNaN(recF.score));
+    } catch(e) {
+      log(`Missing Opportunity Fields: Crashed (${e.message})`, false);
+    }
+
+    // Mathematical Correctness
+    let isMathValid = true;
+    for(let i=0; i<100; i++) {
+        const randProfile = { skills: [Math.random() > 0.5 ? "Python" : "None"] };
+        const score = RecommendationEngine.scoreOne(randProfile, mockOpp).score;
+        if (score < 0 || score > 100 || isNaN(score)) isMathValid = false;
+    }
+    log(`Mathematical Correctness: 0 <= score <= 100 for random permutations`, isMathValid);
+
+  </script>
+</body>
+</html>

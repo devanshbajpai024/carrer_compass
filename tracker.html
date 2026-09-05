@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Tracker — Student Opportunity Engine</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content">
+    <div class="page-content">
+      <div class="page-header">
+        <h1 class="page-title">📋 Application Tracker</h1>
+        <p class="page-subtitle">Track your opportunities through the application pipeline</p>
+      </div>
+      <!-- Pipeline stage stats -->
+      <div id="pipeline-stats" style="display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-3);margin-bottom:var(--space-6);"></div>
+      <!-- Kanban board -->
+      <div class="kanban-board" id="kanban-board" role="list" aria-label="Application stages"></div>
+      <div id="kanban-empty" style="display:none;">
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <h3>No applications yet</h3>
+          <p>Start by exploring opportunities and clicking "Apply Now" or "Mark Interested".</p>
+          <a href="explore.html" class="btn btn-primary" style="margin-top:var(--space-4);">Explore Opportunities →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data/opportunities.js"></script>
+<script src="js/data/mockUsers.js"></script>
+<script src="js/services/recommendationEngine.js"></script>
+<script src="js/services/userService.js"></script>
+<script src="js/services/authService.js"></script>
+<script src="js/services/opportunityService.js"></script>
+<script src="js/services/savedService.js"></script>
+<script src="js/services/trackerService.js"></script>
+<script src="js/services/notificationService.js"></script>
+<script src="js/services/aiAssistant.js"></script>
+<script src="js/components/toast.js"></script>
+<script src="js/components/sidebar.js"></script>
+<script src="js/components/opportunityCard.js"></script>
+<script src="js/components/aiChat.js"></script>
+<script>
+  document.documentElement.setAttribute('data-theme', localStorage.getItem('soe_theme') || 'dark');
+  if (!AuthService.requireAuth()) throw new Error();
+  const user = AuthService.getCurrentUser();
+  const profile = UserService.getProfile(user.id);
+  Sidebar.init({ page: 'tracker', currentUser: user, studentProfile: profile });
+
+  const STAGES = TrackerService.STAGES;
+  const STAGE_COLORS = {
+    Interested: 'var(--primary-400)', Applied: 'var(--accent-400)',
+    Shortlisted: 'var(--warning-400)', Interview: '#c084fc',
+    Selected: 'var(--success-400)', Rejected: 'var(--danger-400)',
+  };
+  const STAGE_ICONS = { Interested:'⭐', Applied:'📤', Shortlisted:'📌', Interview:'🎤', Selected:'🏆', Rejected:'❌' };
+
+  function render() {
+    const stats = TrackerService.getStats(user.id);
+    const allApps = TrackerService.getAllApplications(user.id);
+
+    // Pipeline stats
+    document.getElementById('pipeline-stats').innerHTML = STAGES.map(s => `
+      <div class="stat-card" style="text-align:center;padding:var(--space-3);">
+        <div style="font-size:20px;">${STAGE_ICONS[s]}</div>
+        <div style="font-size:var(--text-2xl);font-weight:var(--fw-extrabold);color:${STAGE_COLORS[s]};">${stats[s]||0}</div>
+        <div style="font-size:var(--text-xs);color:var(--text-muted);">${s}</div>
+      </div>`).join('');
+
+    if (allApps.length === 0) {
+      document.getElementById('kanban-board').style.display = 'none';
+      document.getElementById('kanban-empty').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('kanban-board').style.display = 'flex';
+    document.getElementById('kanban-empty').style.display = 'none';
+
+    // Kanban columns
+    const board = document.getElementById('kanban-board');
+    board.innerHTML = STAGES.map(stage => {
+      const stageApps = allApps.filter(a => a.status === stage);
+      const cardsHTML = stageApps.map(app => {
+        const opp = app.opportunity;
+        if (!opp) return '';
+        const today = new Date();
+        const diff = Math.ceil((new Date(opp.deadline) - today) / (1000*60*60*24));
+        const ddLabel = diff < 0 ? 'Expired' : diff === 0 ? 'Today' : `${diff}d left`;
+        const ddColor = diff <= 0 ? 'var(--danger-400)' : diff <= 7 ? 'var(--warning-400)' : 'var(--text-muted)';
+        return `
+          <div class="kanban-card" onclick="window.location.href='opportunity.html?id=${opp.id}'" role="listitem">
+            <div class="kanban-card-title">${opp.title}</div>
+            <div class="kanban-card-org">${opp.organization}</div>
+            <div style="margin-top:var(--space-2);display:flex;align-items:center;justify-content:space-between;">
+              <span class="badge badge-${opp.category.toLowerCase()}" style="font-size:10px;">${opp.category}</span>
+              <span style="font-size:10px;color:${ddColor};">⏰ ${ddLabel}</span>
+            </div>
+            <!-- Status changer -->
+            <select class="form-select" style="margin-top:var(--space-2);font-size:10px;padding:4px 8px;"
+              onchange="changeStatus('${user.id}','${opp.id}',this.value)" onclick="event.stopPropagation()">
+              ${STAGES.map(s => `<option value="${s}" ${s===stage?'selected':''}>${STAGE_ICONS[s]} ${s}</option>`).join('')}
+            </select>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="kanban-column" role="group" aria-label="${stage} column">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title" style="color:${STAGE_COLORS[stage]};">${STAGE_ICONS[stage]} ${stage}</span>
+            <span class="kanban-col-count">${stageApps.length}</span>
+          </div>
+          <div class="kanban-cards">${cardsHTML || `<div style="font-size:var(--text-xs);color:var(--text-muted);text-align:center;padding:var(--space-4);">Empty</div>`}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function changeStatus(userId, oppId, newStatus) {
+    TrackerService.updateStatus(userId, oppId, newStatus);
+    Toast.show({ type: 'success', title: 'Status updated', message: `Moved to ${newStatus}` });
+    render();
+  }
+
+  render();
+  AIChat.init(profile);
+</script>
+</body>
+</html>
