@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathons & Quizzes - Student Opportunity Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .tab-item {
+            padding: 1rem 0;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab-item:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-item.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .event-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .event-title {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .event-org {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .event-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 1rem;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .event-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .event-meta-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .event-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <div id="header-container"></div>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Hackathons & Quizzes</h1>
+                    <p class="page-description">Compete, test your knowledge, and win prizes.</p>
+                </div>
+
+                <div class="tabs" id="event-tabs">
+                    <div class="tab-item active" data-category="hackathons">Hackathons</div>
+                    <div class="tab-item" data-category="quizzes">Quizzes</div>
+                    <div class="tab-item" data-category="competitions">Competitions</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 1rem; flex: 1;">
+                        <input type="text" id="search-input" class="form-control" placeholder="Search events..." style="max-width: 300px;">
+                        <select class="form-control" id="filter-mode" style="max-width: 200px;">
+                            <option value="">Any Mode</option>
+                            <option value="online">Online</option>
+                            <option value="offline">Offline</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="apply-filters-btn">Search</button>
+                </div>
+
+                <div id="events-container">
+                    <!-- Skeletons / List / Error -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/hackathons.js"></script>
+</body>
+</html>

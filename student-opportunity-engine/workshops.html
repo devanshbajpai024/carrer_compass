@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshops - Student Opportunity Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .workshop-card {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .ws-header {
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .ws-title {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .ws-org {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .ws-meta {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .ws-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .ws-meta-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .ws-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <div id="header-container"></div>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Workshops & Training</h1>
+                    <p class="page-description">Upskill yourself with highly rated programs.</p>
+                </div>
+
+                <div class="filter-row">
+                    <select class="form-control" id="filter-category" style="max-width: 200px;">
+                        <option value="">All Categories</option>
+                        <option value="workshop">Workshops</option>
+                        <option value="bootcamp">Bootcamps</option>
+                        <option value="webinar">Webinars</option>
+                        <option value="certification">Certifications</option>
+                        <option value="training">Training Programs</option>
+                    </select>
+                    
+                    <select class="form-control" id="filter-duration" style="max-width: 200px;">
+                        <option value="">Any Duration</option>
+                        <option value="short">Short (&lt; 1 week)</option>
+                        <option value="medium">Medium (1-4 weeks)</option>
+                        <option value="long">Long (1+ months)</option>
+                    </select>
+
+                    <button class="btn btn-primary" id="apply-filters-btn">Filter Programs</button>
+                </div>
+
+                <div id="workshops-container">
+                    <!-- Skeletons / List / Error -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/workshops.js"></script>
+</body>
+</html>

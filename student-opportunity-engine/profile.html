@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Student Opportunity Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .profile-nav {
+            position: sticky;
+            top: 90px;
+        }
+
+        .profile-nav-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .profile-nav-item.active {
+            background-color: var(--accent-light);
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .profile-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-section-title {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--input-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 2rem;
+            border: 2px dashed var(--border-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+            .profile-nav {
+                position: static;
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+            .profile-nav-item {
+                white-space: nowrap;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <div id="header-container"></div>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Your Profile</h1>
+                    <p class="page-description">Manage your personal information, education, and career preferences.</p>
+                </div>
+
+                <div class="profile-layout">
+                    <div class="profile-nav">
+                        <div class="profile-nav-item active" data-target="personal">Personal Information</div>
+                        <div class="profile-nav-item" data-target="education">Education & Career</div>
+                        <div class="profile-nav-item" data-target="preferences">Preferences</div>
+                    </div>
+
+                    <div class="profile-content">
+                        <!-- Loading State -->
+                        <div id="profile-loader">
+                            <div class="profile-section">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-text" style="height: 40px; margin-bottom: 1rem;"></div>
+                                <div class="skeleton skeleton-text" style="height: 40px; margin-bottom: 1rem;"></div>
+                                <div class="skeleton skeleton-text" style="height: 40px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Error State -->
+                        <div id="profile-error-container" class="hidden"></div>
+
+                        <!-- Form Content -->
+                        <form id="profile-form" class="hidden">
+                            <!-- Personal Info -->
+                            <div class="profile-section" id="section-personal">
+                                <h2 class="profile-section-title">Personal Information</h2>
+                                
+                                <div class="avatar-upload">
+                                    <div class="avatar-circle">
+                                        <svg style="width: 32px; height: 32px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-outline" style="margin-bottom: 0.5rem;">Change Avatar</button>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">JPG, GIF or PNG. Max size of 2MB.</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="full-name">Full Name</label>
+                                        <input type="text" id="full-name" class="form-control" name="name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="email">Email Address</label>
+                                        <input type="email" id="email" class="form-control" name="email" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="bio">Bio</label>
+                                    <textarea id="bio" class="form-control" name="bio" rows="4" placeholder="Tell us a little about yourself..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Education & Career -->
+                            <div class="profile-section" id="section-education">
+                                <h2 class="profile-section-title">Education & Career Goal</h2>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="education">Current Education Level</label>
+                                    <select id="education" class="form-control" name="education">
+                                        <option value="">Select Level</option>
+                                        <option value="high_school">High School</option>
+                                        <option value="undergraduate">Undergraduate</option>
+                                        <option value="graduate">Graduate / Master's</option>
+                                        <option value="phd">PhD</option>
+                                        <option value="bootcamp">Bootcamp / Self-Taught</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="career-goal">Primary Career Goal</label>
+                                    <input type="text" id="career-goal" class="form-control" name="careerGoal" placeholder="e.g. Frontend Developer, Data Scientist">
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">This helps the Opportunity Engine recommend highly relevant projects and internships.</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="interests">Key Interests (comma separated)</label>
+                                    <input type="text" id="interests" class="form-control" name="interests" placeholder="e.g. Machine Learning, UI/UX, Web3">
+                                </div>
+                            </div>
+
+                            <!-- Preferences -->
+                            <div class="profile-section" id="section-preferences">
+                                <h2 class="profile-section-title">Opportunity Preferences</h2>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="pref-mode">Preferred Work Mode</label>
+                                        <select id="pref-mode" class="form-control" name="preferredMode">
+                                            <option value="any">Any</option>
+                                            <option value="remote">Remote Only</option>
+                                            <option value="hybrid">Hybrid</option>
+                                            <option value="onsite">On-site</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="pref-location">Preferred Location</label>
+                                        <input type="text" id="pref-location" class="form-control" name="preferredLocation" placeholder="e.g. San Francisco, London">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-bottom: 2rem;">
+                                <button type="button" class="btn btn-outline" id="cancel-btn">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="save-btn">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
