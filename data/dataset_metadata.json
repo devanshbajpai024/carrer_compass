@@ -1,0 +1,59 @@
+﻿{
+    "dataset_version":  "1.0",
+    "random_seed":  123456,
+    "total_examples":  1400,
+    "training_examples":  1000,
+    "validation_examples":  200,
+    "test_examples":  200,
+    "unique_student_count":  140,
+    "opportunity_count":  10,
+    "feature_names":  [
+                          "student_id",
+                          "student_skills",
+                          "student_interests",
+                          "career_goal",
+                          "education",
+                          "experience",
+                          "location_preference",
+                          "eligibility",
+                          "opportunity_id",
+                          "required_skills",
+                          "opportunity_interests",
+                          "career_field",
+                          "opportunity_type",
+                          "opportunity_location",
+                          "experience_required",
+                          "opportunity_eligibility",
+                          "skill_match_percentage",
+                          "number_of_matched_skills",
+                          "number_of_missing_skills",
+                          "interest_match",
+                          "career_goal_match",
+                          "eligibility_match",
+                          "location_match",
+                          "experience_match",
+                          "label"
+                      ],
+    "target_label":  "label",
+    "label_meanings":  {
+                           "2":  "Moderate Match",
+                           "3":  "Good Match",
+                           "4":  "Excellent Match",
+                           "1":  "Weak Match",
+                           "0":  "Poor Match"
+                       },
+    "class_distribution":  {
+                               "3":  70,
+                               "4":  65,
+                               "2":  119,
+                               "1":  286,
+                               "0":  860
+                           },
+    "split_method":  "Student-level split (train/validation/test)",
+    "generation_method":  "Synthetic based on opportunity pool with expert rule labeling.",
+    "synthetic_data":  true,
+    "notes":  [
+                  "Student profiles are generated independently with realistic variation.",
+                  "Labels are derived from expert rules."
+              ]
+}
