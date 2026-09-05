@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Engine - Student Opportunity Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .skill-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .skill-progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--input-bg);
+            border-radius: var(--border-radius-full);
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .skill-progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: var(--border-radius-full);
+            transition: width 0.5s ease-in-out;
+        }
+
+        .skill-gap-card {
+            background: linear-gradient(135deg, rgba(255, 123, 0, 0.1) 0%, rgba(211, 47, 47, 0.1) 100%);
+            border: 1px solid rgba(255, 123, 0, 0.2);
+        }
+
+        .skill-item {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 992px) {
+            .skill-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <div id="header-container"></div>
+            
+            <div class="page-content">
+                <div class="page-header flex justify-between items-center">
+                    <div>
+                        <h1 class="page-title">Skill Engine</h1>
+                        <p class="page-description">Analyze your proficiencies and identify critical skill gaps.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="window.skillEngine.openAddModal()">
+                        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Add Skill
+                    </button>
+                </div>
+
+                <div class="skill-grid">
+                    <!-- Left Column -->
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <div class="card">
+                            <h2 class="section-title">Current Skills & Proficiency</h2>
+                            <div id="current-skills-container">
+                                <!-- Skeletons / API Data -->
+                                <div class="skeleton" style="height: 80px; width: 100%; margin-bottom: 1rem;"></div>
+                                <div class="skeleton" style="height: 80px; width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="card skill-gap-card">
+                            <h2 class="section-title">Skill Gap Analysis</h2>
+                            <p class="text-secondary" style="margin-bottom: 1rem; font-size: 0.875rem;">Skills required for your career goal that you currently lack or need to improve.</p>
+                            <div id="skill-gaps-container">
+                                <div class="skeleton" style="height: 60px; width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <div class="card">
+                            <h2 class="section-title">Career Alignment</h2>
+                            <div id="career-alignment-container">
+                                <div class="skeleton" style="height: 150px; width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="section-title">Recommended Skills</h2>
+                            <div id="recommended-skills-container">
+                                <div class="skeleton" style="height: 100px; width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="section-title">Opportunity Compatibility</h2>
+                            <div id="opportunity-compat-container">
+                                <div class="skeleton" style="height: 100px; width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="skill-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add Skill</h3>
+                <button class="icon-btn" onclick="window.skillEngine.closeModal()">
+                    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <form id="skill-form">
+                <input type="hidden" id="skill-id">
+                <div class="form-group">
+                    <label class="form-label" for="skill-name">Skill Name</label>
+                    <input type="text" id="skill-name" class="form-control" required placeholder="e.g. Data Structures">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="skill-proficiency">Proficiency (0-100)</label>
+                    <input type="number" id="skill-proficiency" class="form-control" required min="0" max="100" placeholder="0">
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-outline" onclick="window.skillEngine.closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="skill-save-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/skill-engine.js"></script>
+</body>
+</html>
