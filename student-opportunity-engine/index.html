@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Opportunity Engine - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .landing-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .landing-hero {
+            flex: 1.2;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--sidebar-bg) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+        
+        .brand svg {
+            color: var(--accent);
+        }
+        
+        .brand h1 {
+            font-size: 1.75rem;
+            margin: 0;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: -webkit-linear-gradient(0deg, var(--accent) 0%, #ff9d40 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-item h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-item p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .login-section {
+            flex: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-bg);
+            padding: 2rem;
+        }
+        
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .login-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .login-subtitle {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 992px) {
+            .landing-container {
+                flex-direction: column;
+            }
+            .landing-hero, .login-section {
+                flex: auto;
+            }
+            .landing-hero {
+                padding: 2rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="landing-container">
+        <!-- Value Proposition Section -->
+        <div class="landing-hero">
+            <div class="brand">
+                <svg style="width: 32px; height: 32px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <h1>Opportunity Engine</h1>
+            </div>
+            
+            <h2 class="hero-title">Discover. Build.<br>Compete. Grow.</h2>
+            <p class="hero-subtitle">One intelligent platform for every opportunity that moves your career forward. AI-driven matching for your unique skill profile.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>
+                        <svg style="width: 20px; height: 20px; color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        Smart Matching
+                    </h3>
+                    <p>Opportunities recommended dynamically based on your actual skills and career goals.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>
+                        <svg style="width: 20px; height: 20px; color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        Skill Engine
+                    </h3>
+                    <p>Analyze your proficiencies and identify critical skill gaps to guide your next steps.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>
+                        <svg style="width: 20px; height: 20px; color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Career Roadmaps
+                    </h3>
+                    <p>Dynamic visual roadmaps built specifically for your current education and profile.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Section -->
+        <div class="login-section">
+            <div class="login-card">
+                <h2 class="login-title">Welcome Back</h2>
+                <p class="login-subtitle">Sign in to access your dashboard</p>
+                
+                <form id="login-form">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" required placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-control" required placeholder="Enter your password">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-full" id="login-btn" style="padding: 0.75rem; font-size: 1rem;">
+                        Sign In
+                    </button>
+                    
+                    <div id="login-error" class="hidden mt-4" style="color: var(--danger); text-align: center; font-size: 0.875rem;">
+                        Authentication failed. Please verify credentials.
+                    </div>
+                </form>
+
+                <div class="mt-8 text-center" style="border-top: 1px dashed var(--border-color); padding-top: 1.5rem;">
+                    <p class="text-secondary" style="font-size: 0.875rem;">Don't have an account? <a href="#">Request Access</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            const errorMsg = document.getElementById('login-error');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            btn.disabled = true;
+            btn.innerHTML = 'Signing in...';
+            errorMsg.classList.add('hidden');
+
+            try {
+                await window.auth.login(email, password);
+            } catch (err) {
+                // If backend is unavailable or auth fails, we strictly handle the failure UI
+                errorMsg.classList.remove('hidden');
+                errorMsg.innerText = err.message || 'Authentication failed. API unavailable.';
+                window.components.showToast('error', 'Login attempt failed. Check backend connectivity.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Sign In';
+            }
+        });
+    </script>
+</body>
+</html>

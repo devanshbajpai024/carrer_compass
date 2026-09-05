@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Student Opportunity Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .dashboard-hero {
+            background: linear-gradient(135deg, var(--card-bg) 0%, var(--primary-bg) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .hero-info h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .hero-meta-item i svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .summary-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .summary-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .recommendation-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .rec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .match-score {
+            background-color: var(--success-light);
+            color: var(--success);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-full);
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .rec-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .rec-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .rec-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 992px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dashboard-hero {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Injected via components.js -->
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <!-- Injected via components.js -->
+            <div id="header-container"></div>
+            
+            <div class="page-content">
+                <!-- Hero Section (Dynamic) -->
+                <div id="dashboard-hero-container">
+                    <div class="skeleton" style="height: 120px; border-radius: var(--border-radius-lg); margin-bottom: 2rem;"></div>
+                </div>
+
+                <!-- Summary Cards (Dynamic) -->
+                <div id="summary-cards-container">
+                    <div class="grid grid-cols-4 gap-4" style="margin-bottom: 2rem;">
+                        <div class="skeleton" style="height: 100px; border-radius: var(--border-radius-md);"></div>
+                        <div class="skeleton" style="height: 100px; border-radius: var(--border-radius-md);"></div>
+                        <div class="skeleton" style="height: 100px; border-radius: var(--border-radius-md);"></div>
+                        <div class="skeleton" style="height: 100px; border-radius: var(--border-radius-md);"></div>
+                    </div>
+                </div>
+
+                <!-- Recommended Opportunities Section -->
+                <div class="section-header">
+                    <h2 class="section-title">Recommended For You</h2>
+                    <a href="internships.html" class="btn btn-outline" style="font-size: 0.75rem;">View All</a>
+                </div>
+                <div id="recommendations-container">
+                    <!-- Skeletons will be injected by JS -->
+                </div>
+
+                <!-- Skill Progress & Gaps -->
+                <div class="grid grid-cols-2 gap-4" style="margin-top: 2rem;">
+                    <div>
+                        <div class="section-header" style="margin-top: 0;">
+                            <h2 class="section-title">Your Skill Progress</h2>
+                            <a href="skill-engine.html" class="btn btn-outline" style="font-size: 0.75rem;">Manage</a>
+                        </div>
+                        <div id="skills-container">
+                            <div class="skeleton" style="height: 200px; border-radius: var(--border-radius-md);"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="section-header" style="margin-top: 0;">
+                            <h2 class="section-title">Upcoming Opportunities</h2>
+                            <a href="hackathons.html" class="btn btn-outline" style="font-size: 0.75rem;">Calendar</a>
+                        </div>
+                        <div id="upcoming-container">
+                            <div class="skeleton" style="height: 200px; border-radius: var(--border-radius-md);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

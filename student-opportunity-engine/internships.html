@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internships & Jobs - Student Opportunity Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .filter-bar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-sm);
+            outline: none;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .filter-select:focus {
+            border-color: var(--accent);
+        }
+
+        .opportunity-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .opp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .opp-title {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .opp-org {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .opp-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .opp-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .opp-meta-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .opp-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .opp-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 0.5rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <div id="header-container"></div>
+            
+            <div class="page-content">
+                <div class="page-header flex justify-between items-center">
+                    <div>
+                        <h1 class="page-title">Internships & Jobs</h1>
+                        <p class="page-description">Discover opportunities matched to your skills and career goals.</p>
+                    </div>
+                </div>
+
+                <div class="filter-bar">
+                    <select class="filter-select" id="filter-type">
+                        <option value="">All Types</option>
+                        <option value="internship">Internships</option>
+                        <option value="job">Full-time Jobs</option>
+                        <option value="freelance">Freelance</option>
+                    </select>
+                    
+                    <select class="filter-select" id="filter-mode">
+                        <option value="">Any Mode</option>
+                        <option value="remote">Remote</option>
+                        <option value="onsite">On-site</option>
+                        <option value="hybrid">Hybrid</option>
+                    </select>
+
+                    <select class="filter-select" id="filter-sort">
+                        <option value="recommended">Recommended First</option>
+                        <option value="recent">Most Recent</option>
+                        <option value="deadline">Expiring Soon</option>
+                    </select>
+                    
+                    <button class="btn btn-primary" id="apply-filters-btn">
+                        Apply Filters
+                    </button>
+                </div>
+
+                <div id="internships-container">
+                    <!-- Skeletons / List / Error -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/internships.js"></script>
+</body>
+</html>
