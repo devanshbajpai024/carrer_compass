@@ -19,9 +19,9 @@ const workshopsModule = {
 
         try {
             const data = await window.api.getWorkshops({ category, duration });
-            
-            if (data && data.length > 0) {
-                workshopsModule.renderCards(data);
+            const items = Array.isArray(data) ? data : [];
+            if (items.length > 0) {
+                workshopsModule.renderCards(items);
             } else {
                 window.components.renderEmptyState(containerId, 'No programs found', 'Try adjusting your filters to see more results.');
             }
@@ -37,7 +37,7 @@ const workshopsModule = {
         let html = '<div class="grid grid-cols-4 gap-4">';
         
         items.forEach(item => {
-            const skillsHTML = (item.skills || []).map(skill => `<span class="badge badge-neutral">${skill}</span>`).join('');
+            const skillsHTML = (item.skills || []).map(s => `<span class="badge badge-neutral">${s.skill || s}</span>`).join('');
             
             html += `
                 <div class="card workshop-card">
@@ -45,7 +45,7 @@ const workshopsModule = {
                     
                     <div class="ws-header">
                         <h3 class="ws-title">${item.title}</h3>
-                        <div class="ws-org">${item.organizer}</div>
+                        <div class="ws-org">${item.organization || item.organizer || ''}</div>
                     </div>
                     
                     <div class="ws-meta">
@@ -72,7 +72,7 @@ const workshopsModule = {
                     </div>
                     
                     <div style="margin-top: auto; padding-top: 1rem;">
-                        <button class="btn btn-outline w-full" onclick="window.components.showToast('info', 'Opening registration...')">Register Now</button>
+                        <button class="btn btn-outline w-full" onclick="window.api.saveOpportunity('${item._id}').then(() => window.components.showToast('success', 'Saved!')).catch(e => window.components.showToast('error', e.message))">Register / Save</button>
                     </div>
                 </div>
             `;

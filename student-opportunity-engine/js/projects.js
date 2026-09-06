@@ -21,9 +21,9 @@ const projectsModule = {
 
         try {
             const data = await window.api.getProjects({ difficulty });
-            
-            if (data && data.length > 0) {
-                projectsModule.renderCards(data);
+            const items = Array.isArray(data) ? data : [];
+            if (items.length > 0) {
+                projectsModule.renderCards(items);
             } else {
                 window.components.renderEmptyState(containerId, 'No projects found', 'Update your profile and skills to get personalized project recommendations.');
             }
@@ -39,13 +39,15 @@ const projectsModule = {
         let html = '<div class="grid grid-cols-2 gap-4">';
         
         items.forEach(item => {
-            const techHTML = (item.technology || []).map(tech => `<span class="badge badge-neutral">${tech}</span>`).join('');
-            const skillsHTML = (item.skillsDeveloped || []).map(skill => `<span class="badge badge-accent">${skill}</span>`).join('');
-            
-            // Generate difficulty dots
-            let diffLevel = 1; // beginner
-            if (item.difficulty === 'intermediate') diffLevel = 2;
-            if (item.difficulty === 'advanced') diffLevel = 3;
+            // Project schema: technologies[], learningOutcomes[], difficulty (Beginner/Intermediate/Advanced)
+            const techHTML = (item.technologies || item.technology || []).map(tech => `<span class="badge badge-neutral">${tech}</span>`).join('');
+            const skillsHTML = (item.learningOutcomes || item.skillsDeveloped || []).map(skill => `<span class="badge badge-accent">${skill}</span>`).join('');
+
+            // Normalise difficulty capitalisation
+            const diff = (item.difficulty || 'Beginner').toLowerCase();
+            let diffLevel = 1;
+            if (diff === 'intermediate') diffLevel = 2;
+            if (diff === 'advanced') diffLevel = 3;
             
             const diffDots = [1, 2, 3].map(level => 
                 `<div class="diff-dot ${level <= diffLevel ? 'active' : ''}"></div>`

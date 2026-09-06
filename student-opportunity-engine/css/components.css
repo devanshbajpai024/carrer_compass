@@ -4,7 +4,7 @@
 .sidebar {
     width: 260px;
     background-color: var(--sidebar-bg);
-    border-right: 1px solid var(--border-color);
+    border-right: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -16,7 +16,7 @@
 
 .sidebar-header {
     padding: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logo-container {
@@ -25,7 +25,7 @@
     gap: 0.75rem;
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #FFFFFF;
 }
 
 .logo-icon {
@@ -48,31 +48,31 @@
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     border-radius: var(--border-radius-sm);
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
     font-weight: 500;
     transition: var(--transition);
     cursor: pointer;
 }
 
 .nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
 }
 
 .nav-item.active {
-    background-color: var(--accent-light);
-    color: var(--accent);
+    background-color: var(--accent);
+    color: #FFFFFF;
 }
 
 .sidebar-footer {
     padding: 1.5rem 1rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Header */
 .top-header {
     height: 70px;
-    background-color: var(--primary-bg);
+    background-color: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -86,7 +86,7 @@
 .search-bar {
     display: flex;
     align-items: center;
-    background-color: var(--input-bg);
+    background-color: var(--primary-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-full);
     padding: 0.5rem 1rem;
@@ -130,7 +130,7 @@
 }
 
 .icon-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
     color: var(--text-primary);
 }
 
@@ -140,12 +140,14 @@
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-md);
     padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
     transition: var(--transition);
 }
 
 .card:hover {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-color);
     box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
 }
 
 /* Buttons */
@@ -181,7 +183,7 @@
 
 .btn-outline:hover {
     border-color: var(--text-secondary);
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(0, 0, 0, 0.03);
 }
 
 /* Grid Layouts */
@@ -244,7 +246,7 @@
 
 /* Skeletons */
 .skeleton {
-    background: linear-gradient(90deg, var(--input-bg) 25%, var(--border-color) 50%, var(--input-bg) 75%);
+    background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
     border-radius: var(--border-radius-sm);
@@ -285,6 +287,7 @@
 .form-control:focus {
     outline: none;
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
 }
 
 /* Toasts */

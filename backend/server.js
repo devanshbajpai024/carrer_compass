@@ -13,6 +13,7 @@ const applicationRoutes = require('./src/routes/applicationRoutes');
 const notificationRoutes = require('./src/routes/notificationRoutes');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const aiRoutes = require('./src/routes/aiRoutes');
+const searchRoutes = require('./src/routes/searchRoutes');
 
 // Load env variables
 dotenv.config();
@@ -38,6 +39,7 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/search', searchRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {

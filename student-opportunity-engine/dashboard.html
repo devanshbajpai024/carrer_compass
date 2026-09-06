@@ -4,30 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Student Opportunity Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/responsive.css">
     <style>
         .dashboard-hero {
-            background: linear-gradient(135deg, var(--card-bg) 0%, var(--primary-bg) 100%);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, #0F2B46 0%, #1a4068 100%);
+            border: none;
             border-radius: var(--border-radius-lg);
             padding: 2rem;
             margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: #FFFFFF;
         }
         
         .hero-info h1 {
             font-size: 2rem;
             margin-bottom: 0.5rem;
+            color: #FFFFFF;
         }
         
         .hero-meta {
             display: flex;
             gap: 1.5rem;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.875rem;
         }
         
@@ -98,8 +103,8 @@
         }
         
         .match-score {
-            background-color: var(--success-light);
-            color: var(--success);
+            background-color: rgba(0, 86, 210, 0.1);
+            color: var(--accent);
             padding: 0.25rem 0.75rem;
             border-radius: var(--border-radius-full);
             font-weight: 600;

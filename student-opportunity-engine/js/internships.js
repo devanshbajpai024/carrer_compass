@@ -19,10 +19,11 @@ const internshipsModule = {
         const sort = document.getElementById('filter-sort').value;
 
         try {
-            const data = await window.api.getInternships({ type, mode, sort });
-            
-            if (data && data.length > 0) {
-                internshipsModule.renderCards(data);
+            // api.js auto-unwraps .data; backend returns array of Opportunity docs
+            const data = await window.api.getInternships({ mode, sort });
+            const items = Array.isArray(data) ? data : [];
+            if (items.length > 0) {
+                internshipsModule.renderCards(items);
             } else {
                 window.components.renderEmptyState(containerId, 'No opportunities found', 'Try adjusting your filters or checking back later.');
             }
@@ -38,7 +39,8 @@ const internshipsModule = {
         let html = '<div class="grid grid-cols-3 gap-4">';
         
         items.forEach(item => {
-            const skillsHTML = (item.skills || []).map(skill => `<span class="badge badge-neutral">${skill}</span>`).join('');
+            // item.skills is [{ skill, importance }] from Opportunity schema
+            const skillsHTML = (item.skills || []).map(s => `<span class="badge badge-neutral">${s.skill || s}</span>`).join('');
             
             html += `
                 <div class="card opportunity-card">
@@ -78,8 +80,8 @@ const internshipsModule = {
                     </div>
                     
                     <div class="opp-actions">
-                        <button class="btn btn-primary" style="flex: 1;" onclick="window.components.showToast('info', 'Opening application...')">Apply</button>
-                        <button class="btn btn-outline" onclick="window.components.showToast('success', 'Saved!')">Save</button>
+                        <button class="btn btn-primary apply-opp-btn" data-id="${item._id}" style="flex: 1;">Apply</button>
+                        <button class="btn btn-outline save-opp-btn" data-id="${item._id}">Save</button>
                     </div>
                 </div>
             `;
@@ -87,6 +89,36 @@ const internshipsModule = {
         
         html += '</div>';
         container.innerHTML = html;
+
+        // Wire Apply/Save buttons
+        container.querySelectorAll('.apply-opp-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.dataset.id;
+                btn.disabled = true; btn.textContent = 'Applying...';
+                try {
+                    await window.api.applyToOpportunity(id);
+                    btn.textContent = 'Applied ✓';
+                    window.components.showToast('success', 'Application submitted!');
+                } catch (err) {
+                    btn.disabled = false; btn.textContent = 'Apply';
+                    window.components.showToast('error', 'Failed: ' + err.message);
+                }
+            });
+        });
+        container.querySelectorAll('.save-opp-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.dataset.id;
+                btn.disabled = true; btn.textContent = 'Saving...';
+                try {
+                    await window.api.saveOpportunity(id);
+                    btn.textContent = 'Saved ✓';
+                    window.components.showToast('success', 'Opportunity saved!');
+                } catch (err) {
+                    btn.disabled = false; btn.textContent = 'Save';
+                    window.components.showToast('error', 'Failed: ' + err.message);
+                }
+            });
+        });
     }
 };
 

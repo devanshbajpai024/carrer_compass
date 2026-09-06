@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Opportunity Engine - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -15,7 +18,7 @@
         
         .landing-hero {
             flex: 1.2;
-            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--sidebar-bg) 100%);
+            background-color: var(--sidebar-bg); /* Deep Navy */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -28,7 +31,7 @@
             align-items: center;
             gap: 1rem;
             margin-bottom: 2rem;
-            color: var(--text-primary);
+            color: #FFFFFF;
         }
         
         .brand svg {
@@ -44,14 +47,12 @@
             font-size: 3.5rem;
             line-height: 1.2;
             margin-bottom: 1.5rem;
-            background: -webkit-linear-gradient(0deg, var(--accent) 0%, #ff9d40 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #FFFFFF;
         }
         
         .hero-subtitle {
             font-size: 1.25rem;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.8);
             margin-bottom: 3rem;
             max-width: 600px;
         }
@@ -69,10 +70,11 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: #FFFFFF;
         }
         
         .feature-item p {
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 0.875rem;
         }
         
@@ -191,7 +193,7 @@
                 </form>
 
                 <div class="mt-8 text-center" style="border-top: 1px dashed var(--border-color); padding-top: 1.5rem;">
-                    <p class="text-secondary" style="font-size: 0.875rem;">Don't have an account? <a href="#">Request Access</a></p>
+                    <p class="text-secondary" style="font-size: 0.875rem;">Don't have an account? <a href="register.html">Request Access</a></p>
                 </div>
             </div>
         </div>

@@ -3,7 +3,8 @@ const router = express.Router();
 const {
   getRecommendations,
   getRecommendationById,
-  refreshRecommendations
+  refreshRecommendations,
+  evaluateRecommendation
 } = require('../controllers/recommendationController');
 const { protect } = require('../middleware/auth');
 
@@ -12,6 +13,9 @@ router.route('/')
 
 router.route('/refresh')
   .post(protect, refreshRecommendations);
+
+router.route('/evaluate')
+  .post(evaluateRecommendation);
 
 router.route('/:id')
   .get(protect, getRecommendationById);

@@ -1,4 +1,6 @@
 const Application = require('../models/Application');
+const Opportunity = require('../models/Opportunity');
+const { createNotification } = require('../services/notificationService');
 
 exports.getApplications = async (req, res) => {
   try {
@@ -22,10 +24,12 @@ exports.getApplicationById = async (req, res) => {
 exports.createApplication = async (req, res) => {
   try {
     const { opportunityId, status, notes } = req.body;
-    
+    if (!opportunityId) {
+      return res.status(400).json({ success: false, message: 'opportunityId is required' });
+    }
+
     let application = await Application.findOne({ studentId: req.user._id, opportunityId });
     if (application) {
-      // update if exists
       if (status) application.status = status;
       if (notes) application.notes = notes;
       application.appliedAt = status === 'APPLIED' && !application.appliedAt ? new Date() : application.appliedAt;
@@ -40,11 +44,26 @@ exports.createApplication = async (req, res) => {
       });
     }
 
+    // Send notification on Apply (not just Save)
+    if (status === 'APPLIED') {
+      const opp = await Opportunity.findById(opportunityId).select('title');
+      if (opp) {
+        createNotification(
+          req.user._id,
+          'APPLICATION_UPDATE',
+          'Application Submitted',
+          `You have successfully applied to "${opp.title}". Good luck!`,
+          opportunityId
+        );
+      }
+    }
+
     res.status(201).json({ success: true, data: application, message: 'Application saved/applied' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 exports.updateApplication = async (req, res) => {
   try {

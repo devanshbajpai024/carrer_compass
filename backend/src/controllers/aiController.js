@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { generateGroqResponse } = require('../services/aiService');
 
 exports.chatWithAI = async (req, res) => {
   try {
@@ -26,33 +27,7 @@ Do not be a generic AI; always tailor your advice based on this student's profil
 
 Keep your responses concise, encouraging, and highly relevant to their specific goals and skills.`;
 
-    // Prepare Groq API request
-    const groqPayload = {
-      model: 'groq/compound', // using a supported model found on this instance
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: message }
-      ],
-      max_tokens: 500,
-      temperature: 0.7
-    };
-
-    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.AI_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(groqPayload)
-    });
-
-    if (!groqResponse.ok) {
-      const errorData = await groqResponse.text();
-      throw new Error(`Groq API Error: ${errorData}`);
-    }
-
-    const data = await groqResponse.json();
-    const reply = data.choices[0].message.content;
+    const reply = await generateGroqResponse(systemPrompt, message);
 
     res.json({ success: true, data: { reply } });
 

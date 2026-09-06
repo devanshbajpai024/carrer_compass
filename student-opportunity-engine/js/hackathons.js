@@ -31,10 +31,10 @@ const hackathonsModule = {
         const mode = document.getElementById('filter-mode').value;
 
         try {
-            const data = await window.api.getHackathons({ category: hackathonsModule.currentCategory, q: searchQuery, mode });
-            
-            if (data && data.length > 0) {
-                hackathonsModule.renderCards(data);
+            const data = await window.api.getHackathons({ q: searchQuery, mode });
+            const items = Array.isArray(data) ? data : [];
+            if (items.length > 0) {
+                hackathonsModule.renderCards(items);
             } else {
                 window.components.renderEmptyState(containerId, 'No events found', `Try adjusting your filters to find more ${hackathonsModule.currentCategory}.`);
             }
@@ -50,14 +50,14 @@ const hackathonsModule = {
         let html = '<div class="grid grid-cols-3 gap-4">';
         
         items.forEach(item => {
-            const skillsHTML = (item.skills || []).map(skill => `<span class="badge badge-neutral">${skill}</span>`).join('');
+            const skillsHTML = (item.skills || []).map(s => `<span class="badge badge-neutral">${s.skill || s}</span>`).join('');
             
             html += `
                 <div class="card event-card">
                     <div class="event-header">
                         <div>
                             <h3 class="event-title">${item.title}</h3>
-                            <div class="event-org">${item.organizer}</div>
+                            <div class="event-org">${item.organization || item.organizer || ''}</div>
                         </div>
                         ${item.matchScore ? `<span class="badge badge-success">${item.matchScore}% Match</span>` : ''}
                     </div>
@@ -94,8 +94,8 @@ const hackathonsModule = {
                     </div>
                     
                     <div style="margin-top: auto; display: flex; gap: 0.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-                        <button class="btn btn-primary" style="flex: 1;" onclick="window.components.showToast('info', 'Redirecting to registration...')">Register</button>
-                        <button class="btn btn-outline" onclick="window.components.showToast('success', 'Saved event!')">Save</button>
+                        <button class="btn btn-primary apply-opp-btn" data-id="${item._id}" style="flex: 1;">Register</button>
+                        <button class="btn btn-outline save-opp-btn" data-id="${item._id}">Save</button>
                     </div>
                 </div>
             `;
@@ -103,6 +103,35 @@ const hackathonsModule = {
         
         html += '</div>';
         container.innerHTML = html;
+
+        container.querySelectorAll('.apply-opp-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.dataset.id;
+                btn.disabled = true; btn.textContent = 'Registering...';
+                try {
+                    await window.api.applyToOpportunity(id);
+                    btn.textContent = 'Registered ✓';
+                    window.components.showToast('success', 'Registration submitted!');
+                } catch (err) {
+                    btn.disabled = false; btn.textContent = 'Register';
+                    window.components.showToast('error', 'Failed: ' + err.message);
+                }
+            });
+        });
+        container.querySelectorAll('.save-opp-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.dataset.id;
+                btn.disabled = true; btn.textContent = 'Saving...';
+                try {
+                    await window.api.saveOpportunity(id);
+                    btn.textContent = 'Saved ✓';
+                    window.components.showToast('success', 'Saved!');
+                } catch (err) {
+                    btn.disabled = false; btn.textContent = 'Save';
+                    window.components.showToast('error', 'Failed: ' + err.message);
+                }
+            });
+        });
     }
 };
 

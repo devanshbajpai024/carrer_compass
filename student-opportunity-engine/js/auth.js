@@ -7,13 +7,33 @@ const auth = {
 
     login: async (email, password) => {
         try {
+            // api.js auto-unwraps .data, so response = { _id, name, email, token }
             const response = await window.api.login({ email, password });
-            if (response && response.token) {
-                localStorage.setItem('soe_token', response.token);
+            const token = response && (response.token || (response.data && response.data.token));
+            if (token) {
+                localStorage.setItem('soe_token', token);
                 window.location.href = 'dashboard.html';
+            } else {
+                throw new Error('No token received from server');
             }
         } catch (error) {
             console.error('Authentication failed:', error);
+            throw error;
+        }
+    },
+
+    register: async (name, email, password) => {
+        try {
+            const response = await window.api.register({ name, email, password });
+            const token = response && (response.token || (response.data && response.data.token));
+            if (token) {
+                localStorage.setItem('soe_token', token);
+                window.location.href = 'dashboard.html';
+            } else {
+                throw new Error('No token received from server after registration');
+            }
+        } catch (error) {
+            console.error('Registration failed:', error);
             throw error;
         }
     },
